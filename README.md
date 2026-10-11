@@ -1,15 +1,6 @@
 # TashRent — кейс-витрина
 
-> **English summary.** TashRent is a Telegram Mini App + bot that aggregates long-term apartment rentals in Uzbekistan
-> (started as Tashkent) from public sources into one deduplicated feed with an owner/realtor signal and a freshness
-> check. The author was the first user (dogfooding: he was searching for an apartment himself). Built: OLX collection via
-> the platform JSON API and a Scrapy collector, multi-source deduplication, a liveness checker, a Mini App, a bot,
-> channel/community growth tooling (review-only, outbound sending off). **Status: the repository header
-> declares the rental project "PAUSED / PRESERVED" since 2026-09-30 because of a "fast cash" priority**, while the
-> git history shows 105 commits between 2026-10-03 and 2026-10-07 and the production services are active (audit
-> 2026-10-11). The documents do **not** contain a described "relocant pain found instead of the original one";
-> this repo says so explicitly and lists what the owner needs to add. This is a documentation-only showcase; no source,
-> no data.
+> **English summary.** TashRent is a Telegram Mini App + bot that aggregates long-term apartment rentals in Uzbekistan (started as Tashkent) from public sources into one deduplicated feed with an owner/realtor signal and a freshness check; the author was the first user, searching for an apartment himself. Built: OLX collection via the platform JSON API and a Scrapy collector, multi-source deduplication, a liveness checker, a Mini App, a bot, and channel/community growth tooling (review-only, outbound sending off). **Status: the repository header declares the rental project "PAUSED / PRESERVED" since 2026-09-30 because of a "fast cash" priority**, while the git history shows 105 commits between 2026-10-03 and 2026-10-07 and the production services are active (audit 2026-10-11). The documents do **not** contain a described "relocant pain found instead of the original one"; this repo says so explicitly and lists what the owner needs to add, and this is a documentation-only showcase with no source or data.
 
 Источник: документы репозитория `tashkent-rental` (`STATE.md`, `DESIGN.md`, `QUEUE.md`, `OPERATIONS.md`,
 `SCOREBOARD.md`, `PRELAUNCH_DECISIONS_2026-10-03.md`, `docs/HANDOFF-2026-10-06.md`, `docs/LAUNCH-2026-10-06.md`,
@@ -100,7 +91,7 @@ no auto-send»).
 | Монетизация не меняется до 20 активных риелторов | Нет сигнала для ценообразования | `docs/LAUNCH-2026-10-06.md` (R6.6) |
 | Релизы как каталоги + `switch_release.sh`, откат одной командой | Быстрый откат без касания данных | `OPERATIONS.md` |
 
-## 4. Результаты и цифры (подтверждённые)
+## 4. Результаты и цифры
 
 | Показатель | Значение | Источник |
 |---|---|---|
@@ -119,7 +110,15 @@ no auto-send»).
 тест оплаты 49 ⭐ с возвратом (`STATUS_FOR_CODEX_2026-10-03.md`, «Not done»). Данных о реальных пользователях и
 платежах после запуска в проверенных документах **не найдено**.
 
-### Что узнал на собственном пути пользователя (только по документам)
+### Что я узнал на собственном пути пользователя
+
+**Со слов владельца, октябрь 2026:**
+
+> Сам искал квартиру в Ташкенте и прошёл путь пользователя. Проблема не в нехватке объявлений, а в отсеве мусора и доверии: много объявлений только на узбекском; иностранцу часто не отвечают или не хотят сдавать; фильтр «частное лицо» на OLX фактически не работает — по моей оценке, около 90% там риелторы и объявления-приманки; нет фильтра по типу жилья (комната, подселение, квартира). В итоге помогла группа для релокантов, где ответили риелторы. Вывод: рынок держат риелторы в закрытых Telegram-группах, а агрегатор для риелторов не отвечает ни на вопрос, откуда брать арендаторов, ни зачем риелтору приходить ко мне.
+
+«Около 90%» — оценка владельца, а не измерение.
+
+#### Наблюдения из документов проекта
 
 - Узкий поиск по реальному бюджету даёт мало совпадений — объём предложения важнее изощрённости пайплайна (`STATE.md`).
 - Прямой доступ к OLX блокировался (403), приходилось идти через reader-прокси, затем найден публичный JSON API
@@ -133,21 +132,42 @@ no auto-send»).
 
 ### Почему пауза
 
-**Причина по документам:** `STATE.md`, строка 1: «RENTAL PROJECT STATUS: PAUSED / PRESERVED | REASON: FAST CASH
-PRIORITY (2026-09-30) | RESUME CONDITION: stable cash flow or explicit user request»; активный режим — «FAST CASH /
-FREELANCE», цель `REAL_EXTERNAL_REVENUE_RECEIVED`. Подробный документ-обоснование назван в `STATE.md`
-(`earn-or-die/factory/HANDOFF_RENTAL_PAUSED_2026-09-30.md`) и **не входит** в источники этой витрины.
+**Причина по документам:** источник прочитан — `earn-or-die/factory/HANDOFF_RENTAL_PAUSED_2026-09-30.md` от 2026-09-30.
+В нём зафиксирован статус `PAUSED / PRESERVED`: проект поставлен на паузу по директиве владельца `FAST CASH PRIORITY`
+от 2026-09-30. Возобновление возможно при стабильном денежном потоке либо явном решении владельца. Это «не провал,
+ничего не удалено». Дополнительных причин паузы помимо приоритета быстрых денег в документе нет.
+
+**На момент паузы:** 638 реальных объявлений из трёх источников (OLX.uz, uybor.uz и Telegram-каналы), 20/20 `pytest`;
+канал в Telegram не создан, бот не запускался, ни один реальный пользователь не видел продукт. Монетизация не проверена:
+`zero users, zero revenue ever measured`.
 
 **Расхождение, которое надо признать:** несмотря на статус «PAUSED» от 2026-09-30, в репозитории после этой даты
 идёт интенсивная работа (105 коммитов 2026-10-03…10-07, релизы, `docs/LAUNCH-2026-10-06.md`) и прод активен
-(`STATUS_REPORT.md` §4). Решение о возобновлении в просмотренных документах не зафиксировано.
+(`STATUS_REPORT.md` §4). Решение о возобновлении в документах не зафиксировано; слов владельца об этом также не получено.
 
 ### Боль релоканта: найденная вместо исходной
 
-**В документах не найдено.** Нет записи формата «исходная гипотеза боли → что выяснилось на пути → новая боль».
-Что есть, и это нельзя выдавать за найденную боль релоканта: перечисленные выше наблюдения о сервисе (устаревшие
-объявления, дубли, слабая контактность), плюс гипотезы в `research/MONETIZATION.md` (помечены как hypotheses-only).
-Чего не хватает владельцу, чтобы заполнить раздел, — в [docs/OWNER_INPUT_NEEDED.md](docs/OWNER_INPUT_NEEDED.md).
+**Со слов владельца, октябрь 2026:** при поиске жилья проблема оказалась не в количестве объявлений, а в отсеве
+объявлений-приманок и риелторов, доверии и ответе иностранцу, языке объявлений и отсутствии фильтра по типу жилья.
+Найти помощь удалось через группу для релокантов, где ответили риелторы.
+
+Вывод владельца: рынок держат риелторы в закрытых Telegram-группах. Открытые вопросы: откуда брать арендаторов для
+агрегатора риелторов и зачем риелтору приходить в продукт.
+
+### Какую гипотезу проверил бы дальше
+
+- **Гипотеза:** заметный отсев объявлений-приманок и риелторов делает поиск понятнее. Проверить на подборке объявлений,
+  как пользователи отличают полезные предложения от приманок и посредников; подтверждением будут повторяющиеся
+  качественные отзывы, что отобранные объявления проще рассматривать и проверять.
+- **Гипотеза:** фильтр по типу жилья помогает быстрее сузить выбор. Проверить, могут ли люди выбрать между комнатой,
+  подселением и квартирой и считают ли результат соответствующим запросу; подтверждением будет качественная обратная
+  связь, что в выдаче остаются нужные варианты.
+- **Гипотеза:** понятный язык объявления, сигналы доверия и удобный первый контакт снижают барьер для иностранца.
+  Проверить на сценариях обращения, какие язык, сведения и способы связи дают уверенность написать; подтверждением будут
+  рассказы пользователей, что они готовы обратиться к найденному предложению.
+- **Гипотеза:** доступ к закрытым риелторским группам даёт релевантные предложения, но требует ценности для риелторов.
+  Проверить в разговорах с участниками групп, какую пользу они видят для арендатора и риелтора; подтверждением будет
+  содержательное согласие участвовать или делиться предложениями без давления.
 
 ## 5. Ограничения и что дальше
 
@@ -167,11 +187,11 @@ FREELANCE», цель `REAL_EXTERNAL_REVENUE_RECEIVED`. Подробный до�
 
 Исходники продукта приватные; данные (объявления, пользователи, платежи) не публикуются. Демо-репозитории модулей —
 `model-pool`, `quality-gate`, `lead-hunter`, `agent-runtime` в каталоге портфолио относятся к Developer Factory и
-GiftQuest ([developer-factory-case](../developer-factory-case/README.md)), а не к TashRent. Модуль сбора TashRent как
+GiftQuest (developer-factory-case), а не к TashRent. Модуль сбора TashRent как
 отдельное демо в портфолио пока не выделен (в `STATUS_REPORT.md` §6 назван кандидатом «TashRent Ingestion», ~85 %).
 
 ## 7. Моя роль
 
-Продуктовая постановка, архитектура, приёмка. Я был первым пользователем и заказчиком (искал квартиру сам),
-принимал результаты по тестам, ручным QA и аудитам. Код написан с помощью ИИ-агентов (Claude, Codex) под управлением
-владельца.
+Продуктовая постановка, архитектура и приёмка — мои. Код написан ИИ-агентами (Claude, Codex) под моим управлением.
+
+Я был первым пользователем и заказчиком (искал квартиру сам), принимал результаты по тестам, ручным QA и аудитам.
